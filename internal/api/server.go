@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/lbrictson/stamp/internal/logging"
+	"github.com/lbrictson/stamp/internal/rules"
 
 	"github.com/labstack/echo"
 )
@@ -22,5 +23,18 @@ func authzRoute(c echo.Context) error {
 // api server is running
 func heartbeat(c echo.Context) error {
 	logging.Logger.Info("Heartbeat hit")
+	// Remove later, just for demoing
+	dummyCheck := rules.HeaderRule{
+		Name:          "silly-heartbeat-rule",
+		Header:        "Sample-H",
+		Value:         "test",
+		ExactMatch:    true,
+		WhiteListed:   true,
+		CaseSensitive: true,
+	}
+	block := dummyCheck.Eval(c.Request())
+	if block {
+		return c.String(501, "Unauthorized")
+	}
 	return c.String(200, "ok")
 }
