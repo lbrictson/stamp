@@ -4,7 +4,7 @@
 *.dll
 *.so
 *.dylib
-stamp
+./stamp
 .env
 
 # Test binary, build with `go test -c`

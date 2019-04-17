@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/lbrictson/stamp/internal/logging"
 	"github.com/lbrictson/stamp/internal/rules"
 
@@ -23,6 +25,7 @@ func authzRoute(c echo.Context) error {
 // api server is running
 func heartbeat(c echo.Context) error {
 	logging.Logger.Info("Heartbeat hit")
+	fmt.Println(c.Request().Host)
 	// Remove later, just for demoing
 	dummyCheck := rules.HeaderRule{
 		Name:          "silly-heartbeat-rule",
