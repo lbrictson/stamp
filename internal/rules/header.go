@@ -38,3 +38,8 @@ func (r HeaderRule) Eval(c *http.Request) bool {
 	}
 	return inValue
 }
+
+// GetName just returns the name of the rule
+func (r HeaderRule) GetName() string {
+	return r.Name
+}

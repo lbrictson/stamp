@@ -1,10 +1,9 @@
 package api
 
 import (
-	"fmt"
+	"github.com/lbrictson/stamp/internal/rulecache"
 
 	"github.com/lbrictson/stamp/internal/logging"
-	"github.com/lbrictson/stamp/internal/rules"
 
 	"github.com/labstack/echo"
 )
@@ -18,6 +17,17 @@ func RunServer() {
 }
 
 func authzRoute(c echo.Context) error {
+	found, ruleList, _ := rulecache.GetCacheHostRules(c.Request().Referer())
+	if found != true {
+		return c.String(200, "ok")
+	}
+	for _, x := range ruleList {
+		block := x.Eval(c.Request())
+		if block {
+			logging.Logger.Info("Blocking request from %v to host %v because rule %v returned block", c.Request().RemoteAddr, c.Request().Referer(), x.GetName())
+			return c.String(501, "Unauthorized")
+		}
+	}
 	return c.String(200, "ok")
 }
 
@@ -25,19 +35,5 @@ func authzRoute(c echo.Context) error {
 // api server is running
 func heartbeat(c echo.Context) error {
 	logging.Logger.Info("Heartbeat hit")
-	fmt.Println(c.Request().Host)
-	// Remove later, just for demoing
-	dummyCheck := rules.HeaderRule{
-		Name:          "silly-heartbeat-rule",
-		Header:        "Sample-H",
-		Value:         "test",
-		ExactMatch:    true,
-		WhiteListed:   true,
-		CaseSensitive: true,
-	}
-	block := dummyCheck.Eval(c.Request())
-	if block {
-		return c.String(501, "Unauthorized")
-	}
 	return c.String(200, "ok")
 }

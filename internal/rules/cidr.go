@@ -12,7 +12,7 @@ import (
 type CIDRRule struct {
 	Name        string
 	WhiteListed bool
-	Block       cidranger.Ranger // A valid CIDR block, parsed from Kubernetes so we know its valid before its here
+	CIDRRange   cidranger.Ranger // A valid CIDR block, parsed from Kubernetes so we know its valid before its here
 }
 
 // Eval implements the rule interface
@@ -20,10 +20,15 @@ func (r CIDRRule) Eval(c *http.Request) bool {
 	// Pull our remote calling IP
 	remote := c.RemoteAddr
 	// Check in in specified CIDR
-	contains, _ := r.Block.Contains(net.ParseIP(remote))
+	contains, _ := r.CIDRRange.Contains(net.ParseIP(remote))
 	// Inverse whitelist
 	if r.WhiteListed {
 		return !contains
 	}
 	return contains
+}
+
+// GetName just returns the name of the rule
+func (r CIDRRule) GetName() string {
+	return r.Name
 }

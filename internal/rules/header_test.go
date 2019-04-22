@@ -52,3 +52,15 @@ func TestHeaderEval(t *testing.T) {
 		}
 	}
 }
+
+func TestHeaderGetNameMethod(t *testing.T) {
+	rule1 := HeaderRule{
+		Name:        "test-name",
+		WhiteListed: true,
+	}
+	name := rule1.GetName()
+	if name != rule1.Name {
+		t.Errorf("Get name should have returned %v but returned %v instead", rule1.Name, name)
+	}
+
+}
