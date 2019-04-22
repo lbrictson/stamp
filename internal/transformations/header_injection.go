@@ -35,3 +35,8 @@ func (r HeaderTransformation) Eval(c *http.Request) map[string]string {
 	}
 	return nil
 }
+
+// GetName just returns the name of the rule
+func (r HeaderTransformation) GetName() string {
+	return r.Name
+}
