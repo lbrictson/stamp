@@ -15,8 +15,8 @@ type HeaderTransformation struct {
 	CaseSensitive   bool
 }
 
-// Eval Implements the transformation interface returning a map of headers to inject into a request if the request matches
-// the transformation rules
+// Eval Implements the transformation interface returning a map of headers to inject into a request
+// if the request matches the transformation rules
 func (r HeaderTransformation) Eval(c *http.Request) map[string]string {
 	match := false
 	headerValue := c.Header.Get(r.Header)
@@ -26,7 +26,7 @@ func (r HeaderTransformation) Eval(c *http.Request) map[string]string {
 		headerValue = strings.ToLower(headerValue)
 	}
 	if r.ExactMatch {
-		match = (valueToMatch == headerValue)
+		match = valueToMatch == headerValue
 	} else {
 		match = strings.Contains(headerValue, valueToMatch)
 	}
