@@ -38,7 +38,7 @@ func limitIngressIP(c echo.Context) error {
 	} else {
 		lock.Lock()
 		defer lock.Unlock()
-		cacheDirectory[payload.Domain] = createCache(1)
+		cacheDirectory[payload.Domain] = createCache(payload.Minutes)
 		incrementCache(cacheDirectory[payload.Domain], payload.IPAddr, payload.Limit)
 	}
 	return c.String(200, "ok")

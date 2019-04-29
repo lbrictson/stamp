@@ -52,9 +52,10 @@ func TestRateLimitBadPayload(t *testing.T) {
 	// Setup request
 	url := "http://localhost:8668/api/v1/limitip"
 	payload := IPPayload{
-		IPAddr: "8.8.8.8",
-		Domain: "fakedomain.net",
-		Limit:  3,
+		IPAddr:  "8.8.8.8",
+		Domain:  "fakedomain.net",
+		Limit:   3,
+		Minutes: 1,
 	}
 	bytePayload, _ := json.Marshal(&payload)
 	req, _ := http.NewRequest("POST", url, bytes.NewReader(bytePayload))
@@ -71,9 +72,10 @@ func TestRateLimitBreached(t *testing.T) {
 	// Setup request
 	url := "http://localhost:8668/api/v1/limitip"
 	payload := IPPayload{
-		IPAddr: "8.8.8.8",
-		Domain: "ratelimitme.net",
-		Limit:  3,
+		IPAddr:  "8.8.8.8",
+		Domain:  "ratelimitme.net",
+		Limit:   3,
+		Minutes: 1,
 	}
 	bytePayload, _ := json.Marshal(&payload)
 	req, _ := http.NewRequest("POST", url, bytes.NewReader(bytePayload))
